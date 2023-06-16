@@ -2,12 +2,14 @@
 #include <assert.h>
 #include <ktypes.h>
 #include <mem_utils.h>
+#include <stdio.h>
 
 static void window_key_callback_default(window_t * win, u8 type, u16 key, u16 mod);
 static void window_quit_callback_default(window_t * win);
 
 window_t * window_new(char * name, u32 win_w, u32 win_h, u32 fb_w, u32 fb_h) {
 	window_t * win = heap_alloc(sizeof(window_t));
+	win->name = name;
 	win->w = win_w;
 	win->h = win_h;
 	win->tw = fb_w;
