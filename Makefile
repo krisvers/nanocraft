@@ -19,9 +19,6 @@ all: $(subst ./dynamic.o,,$(OFILES)) link
 
 win: set-vars-win $(subst ./dynamic.o,,$(OFILES)) link
 
-dynamic:
-	$(CC) dynamic.c -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) $(CCWARNINGS)
-
 set-vars-win:
 	$(eval CC = $(WINCC))
 	$(eval CCFLAGS = $(WINCCFLAGS))
@@ -33,13 +30,13 @@ set-vars-lib:
 
 lib: set-vars-lib compile-lib link-lib
 
-compile-lib: $(subst ./dynamic.o,,$(OFILES))
+compile-lib: $(subst ./main.o,,$(OFILES))
 
 link:
-	$(CC) $(subst $(OBJDIR)/dynamic.o,,$(OBJDIR)/*.o) -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) -v
+	$(CC) $(OBJDIR)/*.o -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) -v
 
 link-lib:
-	$(CC) $(subst $(OBJDIR)/main.o,,$(subst $(OBJDIR)/dynamic.o,,$(OBJDIR)/*.o)) -o $(OUTLIB).$(LIBEXT) -O -fPIC -shared $(CCFLAGS) $(CCLIBS) -v
+	$(CC) $(subst $(OBJDIR)/main.o,,$(OBJDIR)/*.o) -o $(OUTLIB).$(LIBEXT) $(CCFLAGS) $(CCLIBS) -v
 
 %.o: %.c
 	$(CC) -c $? -o $(OBJDIR)/$(notdir $@) $(CCFLAGS) $(CCLIBS) $(CCWARNINGS)
