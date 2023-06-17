@@ -81,6 +81,11 @@ void window_poll(window_t * win) {
 static void window_key_callback_default(window_t * win, u8 type, u16 key, u16 mod) {
 	assert(win != NULL);
 	printf("window %s: %u, %u, %u\n", win->name, type, key, mod);
+	if (key == SDLK_ESCAPE) {
+		win->quit_callback(win);
+	} else if (key == SDLK_r) {
+		win->status = WINDOW_RELOAD;
+	}
 }
 
 static void window_quit_callback_default(window_t * win) {

@@ -1,23 +1,59 @@
 #include <stdio.h>
-#define SDL_MAIN_HANDLED
-#include <state.h>
-#include <kwindow.h>
+#include <stdlib.h>
+#include <dlfcn.h>
 
-window_t * window;
-int main(int argc, char ** argv) {
-	puts("Hello, World!");
+#define FILENAME "./exe.so"
+#define METHOD RTLD_NOW
+#define ENTRY_SYMBOL "entry"
 
-	state_init();
+typedef int (* entry_f)(void);
 
-	window = window_new("test", 800, 500, 320, 200);
-	while (window->status != WINDOW_CLOSED) {
-		window_update(window);
-		window_poll(window);
+void * open(void) {
+	void * h = dlopen(FILENAME, METHOD);
+	if (h == NULL) {
+		fprintf(stderr, "%s\n", dlerror());
+		abort();
 	}
-	window_delete(window);
 
-	state_quit();
+	return h;
+}
 
-	puts("Goodbye, World!");
+entry_f load_entry(void * handle) {
+	entry_f entry;
+	*((void **) &entry) = dlsym(handle, ENTRY_SYMBOL);
+	if (entry == NULL) {
+		fprintf(stderr, "%s\n", dlerror());
+		abort();
+	}
+
+	return entry;
+}
+
+void * handle;
+
+void run_loop(entry_f entry) {
+reload:
+	switch (entry()) {
+		case 1:
+			dlclose(handle);
+			handle = open();
+			entry = load_entry(handle);
+			goto reload;
+		default:
+			dlclose(handle);
+			return;
+	}
+}
+
+int main(void) {
+	puts("Loading game");
+	handle = open();
+
+	puts("Loading entry");
+	entry_f entry;
+	entry = load_entry(handle);
+
+	run_loop(entry);
+
 	return 0;
 }

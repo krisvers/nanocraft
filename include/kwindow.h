@@ -7,6 +7,7 @@
 typedef enum {
 	WINDOW_CLOSED = -1,
 	WINDOW_DEFAULT = 0,
+	WINDOW_RELOAD = 1,
 } window_status_e;
 
 typedef struct Window {
