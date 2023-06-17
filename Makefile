@@ -1,7 +1,7 @@
 CC = clang
 WINCC = i686-w64-mingw32-gcc
-CCFLAGS = -std=c99 -Iinclude -rdynamic
-LIBCCFLAGS = -O -shared -fPIC
+CCFLAGS = -std=c99 -Iinclude
+LIBCCFLAGS = -O -shared -fPIC -rdynamic
 WINCCFLAGS = -std=c99 -Iinclude -Iwinclude 
 CCLIBS = -lSDL2
 WINCCLIBS = -Llib -lSDL2 -lSDL2main -Wl,-subsystem,windows -lgdi32 -lkernel32 -lmingw32
@@ -15,12 +15,12 @@ OUTLIB = exe
 LIBEXT = so
 OBJDIR = ./obj
 
-main:
-	$(CC) main.c -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) $(CCWARNINGS) -g
+all: $(subst ./dynamic.o,,$(OFILES)) link
 
-all: $(OFILES) link
+win: set-vars-win $(subst ./dynamic.o,,$(OFILES)) link
 
-win: set-vars-win $(OFILES) link
+dynamic:
+	$(CC) dynamic.c -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) $(CCWARNINGS)
 
 set-vars-win:
 	$(eval CC = $(WINCC))
@@ -33,13 +33,13 @@ set-vars-lib:
 
 lib: set-vars-lib compile-lib link-lib
 
-compile-lib: $(subst ./main.o,,$(OFILES))
+compile-lib: $(subst ./dynamic.o,,$(OFILES))
 
 link:
-	$(CC) $(OBJDIR)/*.o -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) -v
+	$(CC) $(subst $(OBJDIR)/dynamic.o,,$(OBJDIR)/*.o) -o $(OUTDIR)/$(OUTFILE) $(CCFLAGS) $(CCLIBS) -v
 
 link-lib:
-	$(CC) $(subst $(OBJDIR)/main.o,,$(OBJDIR)/*.o) -o $(OUTLIB).$(LIBEXT) -O -fPIC -shared $(CCFLAGS) $(CCLIBS) -v
+	$(CC) $(subst $(OBJDIR)/main.o,,$(subst $(OBJDIR)/dynamic.o,,$(OBJDIR)/*.o)) -o $(OUTLIB).$(LIBEXT) -O -fPIC -shared $(CCFLAGS) $(CCLIBS) -v
 
 %.o: %.c
 	$(CC) -c $? -o $(OBJDIR)/$(notdir $@) $(CCFLAGS) $(CCLIBS) $(CCWARNINGS)

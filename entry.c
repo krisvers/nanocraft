@@ -5,7 +5,7 @@
 
 window_t * window;
 int entry(void) {
-	puts("eeee");
+	puts("a");
 
 	state_init();
 
