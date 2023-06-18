@@ -1,7 +1,7 @@
 #include <stdio.h>
 #define SDL_MAIN_HANDLED
 #include <state.h>
-#include <render.h>
+#include <gfx/render.h>
 #include <kwindow.h>
 #include <file.h>
 #include <img.h>
@@ -21,7 +21,7 @@ int entry(void) {
 
 	file_t * file = file_open("test.txt");
 	img_t * test = img_new(2, 4, IMG_TYPE_BGR);
-	img_load_raw(test, file, IMG_TYPE_BGR);
+	img_load_raw(test, file, IMG_TYPE_RGB);
 	file_close(file);
 
 	window = window_new("test", 1200, 900, 300, 225);
