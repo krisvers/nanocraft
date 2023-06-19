@@ -5,7 +5,7 @@ LIBCCFLAGS = -shared -fPIC -rdynamic -std=c99 -Iinclude
 WINCCFLAGS = -std=c99 -Iinclude -Iwinclude -O3
 CCLIBS = -lSDL2
 WINCCLIBS = -Llib -lSDL2 -lSDL2main -Wl,-subsystem,windows -lgdi32 -lkernel32 -lmingw32
-CCWARNINGS = -Wall -Wextra -Wpedantic -Weverything -Wno-padded -Wno-declaration-after-statement -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-implicit-int-conversion -Wno-implicit-int-float-conversion -Wno-sign-conversion -Wno-unused-command-line-argument -Wno-extra-semi-stmt -Wno-cast-align -Wno-unused-macros -Wno-unused-parameter
+CCWARNINGS = -Wall -Wextra -Wpedantic -Weverything -Wno-padded -Wno-declaration-after-statement -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-implicit-int-conversion -Wno-implicit-int-float-conversion -Wno-sign-conversion -Wno-unused-command-line-argument -Wno-extra-semi-stmt -Wno-cast-align -Wno-unused-macros -Wno-unused-parameter -Wno-switch-enum -Wno-covered-switch-default
 WINCCWARNINGS = -Wall -Wextra -Wpedantic -Wno-padded -Wno-declaration-after-statement -Wno-missing-prototypes -Wno-sign-conversion -Wno-unused-command-line-argument
 CFILES = $(shell find . -type f -name "*.c")
 OFILES = $(CFILES:.c=.o)

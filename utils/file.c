@@ -27,16 +27,12 @@ file_t * file_open(char * filename) {
 
 file_t * file_new(char * filename) {
 	FILE * fp = fopen(filename, "w");
+	fclose(fp);
+
 	file_t * file = heap_alloc(sizeof(file_t));
-
-	fseek(fp, 0L, SEEK_END);
-	file->len = ftell(fp);
-	fseek(fp, 0L, SEEK_SET);
-
+	file->len = 0;
 	file->buffer = NULL;
 	file->name = filename;
-
-	fclose(fp);
 
 	return file;
 }

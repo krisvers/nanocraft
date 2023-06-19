@@ -4,6 +4,8 @@
 #include <ktypes.h>
 #include <img.h>
 
+#define TGA_HEADER_SIZE (18)
+
 typedef struct TGAHeader {
 	u8 id_len;
 	u8 color_map_type;
@@ -17,7 +19,7 @@ typedef struct TGAHeader {
 	u16 img_h;
 	u8 bpp;
 	u8 img_desc;
-} tga_header_t;
+} __attribute__((packed)) tga_header_t;
 
 typedef struct TGAMapData {
 	u8 id_len;
@@ -31,10 +33,6 @@ typedef struct TGAMapData {
 	u8 bpp;
 	u8 img_desc;
 } tga_map_data_t;
-
-typedef struct TGADeveloper {
-	
-} tga_developer_t;
 
 typedef struct TGAExtension {
 	u16 extension_size;
@@ -50,7 +48,7 @@ typedef struct TGAExtension {
 	u32 gamma_value;
 	u32 color_correction_offset;
 	u32 postage_stamp_offset;
-	u32 scan_line offset;
+	u32 scan_line_offset;
 	u8 attributes_type;
 } tga_extension_t;
 
@@ -64,9 +62,12 @@ typedef struct TGAFooter {
 
 typedef struct TGAImg {
 	tga_header_t header;
-	tga_extension_t extension;
-	tga_footer_t footer;
 	img_t * img;
-} tga_img_t;
+} tga_t;
+
+tga_t * tga_new(img_t * img);
+void tga_delete(tga_t * tga);
+tga_t * tga_load(file_t * file);
+void tga_save(tga_t * tga, file_t * file);
 
 #endif

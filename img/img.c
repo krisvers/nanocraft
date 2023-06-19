@@ -4,6 +4,7 @@
 #include <mem_utils.h>
 #include <string.h>
 #include <assert.h>
+#include <gfx/render.h>
 
 img_t * img_new(u32 w, u32 h, img_type_e type) {
 	img_t * img = heap_alloc(sizeof(img_t));
@@ -73,5 +74,28 @@ void img_load_raw(img_t * img, file_t * file, img_type_e type) {
 			break;
 		default:
 			break;
+	}
+}
+
+void img_render(u32 x, u32 y, img_t * img) {
+	switch (img->type) {
+		case IMG_TYPE_RGB:
+			render_texture_rgb(x, y, img->w, img->h, img->bitmap);
+			return;
+		case IMG_TYPE_BGR:
+			render_texture_bgr(x, y, img->w, img->h, img->bitmap);
+			return;
+		case IMG_TYPE_ARGB:
+			render_texture_argb(x, y, img->w, img->h, img->bitmap);
+			return;
+		case IMG_TYPE_ABGR:
+			render_texture_abgr(x, y, img->w, img->h, img->bitmap);
+			return;
+		case IMG_TYPE_RGBA:
+			render_texture_rgba(x, y, img->w, img->h, img->bitmap);
+			return;
+		case IMG_TYPE_BGRA:
+			render_texture_bgra(x, y, img->w, img->h, img->bitmap);
+			return;
 	}
 }
